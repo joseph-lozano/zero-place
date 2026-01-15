@@ -298,11 +298,11 @@ src/
 
 ### Phase 3: Canvas
 
-- [ ] Create Canvas component
-- [ ] Create ColorPicker component
-- [ ] Implement pixel placement
-- [ ] Create CooldownTimer component
-- [ ] Wire up real-time sync
+- [x] Create Canvas component
+- [x] Create ColorPicker component
+- [x] Implement pixel placement
+- [x] Create CooldownTimer component
+- [x] Wire up real-time sync
 
 ### Phase 4: Polish
 
