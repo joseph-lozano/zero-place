@@ -289,12 +289,12 @@ src/
 
 ### Phase 2: Zero
 
-- [ ] Create Zero schema
-- [ ] Create Zero queries
-- [ ] Create Zero mutators
-- [ ] Create Zero query endpoint
-- [ ] Create Zero mutate endpoint (with cooldown)
-- [ ] Set up ZeroProvider in root
+- [x] Create Zero schema
+- [x] Create Zero queries
+- [x] Create Zero mutators
+- [x] Create Zero query endpoint
+- [x] Create Zero mutate endpoint (with cooldown)
+- [x] Set up ZeroProvider in root
 
 ### Phase 3: Canvas
 

@@ -11,6 +11,8 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ApiZeroQueryRouteImport } from './routes/api/zero/query'
+import { Route as ApiZeroMutateRouteImport } from './routes/api/zero/mutate'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 
 const LoginRoute = LoginRouteImport.update({
@@ -23,6 +25,16 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiZeroQueryRoute = ApiZeroQueryRouteImport.update({
+  id: '/api/zero/query',
+  path: '/api/zero/query',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiZeroMutateRoute = ApiZeroMutateRouteImport.update({
+  id: '/api/zero/mutate',
+  path: '/api/zero/mutate',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
   id: '/api/auth/$',
   path: '/api/auth/$',
@@ -33,30 +45,49 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/api/zero/mutate': typeof ApiZeroMutateRoute
+  '/api/zero/query': typeof ApiZeroQueryRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/api/zero/mutate': typeof ApiZeroMutateRoute
+  '/api/zero/query': typeof ApiZeroQueryRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/api/zero/mutate': typeof ApiZeroMutateRoute
+  '/api/zero/query': typeof ApiZeroQueryRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/login' | '/api/auth/$'
+  fullPaths:
+    | '/'
+    | '/login'
+    | '/api/auth/$'
+    | '/api/zero/mutate'
+    | '/api/zero/query'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/login' | '/api/auth/$'
-  id: '__root__' | '/' | '/login' | '/api/auth/$'
+  to: '/' | '/login' | '/api/auth/$' | '/api/zero/mutate' | '/api/zero/query'
+  id:
+    | '__root__'
+    | '/'
+    | '/login'
+    | '/api/auth/$'
+    | '/api/zero/mutate'
+    | '/api/zero/query'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   LoginRoute: typeof LoginRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
+  ApiZeroMutateRoute: typeof ApiZeroMutateRoute
+  ApiZeroQueryRoute: typeof ApiZeroQueryRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -75,6 +106,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/zero/query': {
+      id: '/api/zero/query'
+      path: '/api/zero/query'
+      fullPath: '/api/zero/query'
+      preLoaderRoute: typeof ApiZeroQueryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/zero/mutate': {
+      id: '/api/zero/mutate'
+      path: '/api/zero/mutate'
+      fullPath: '/api/zero/mutate'
+      preLoaderRoute: typeof ApiZeroMutateRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/auth/$': {
       id: '/api/auth/$'
       path: '/api/auth/$'
@@ -89,6 +134,8 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   LoginRoute: LoginRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
+  ApiZeroMutateRoute: ApiZeroMutateRoute,
+  ApiZeroQueryRoute: ApiZeroQueryRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
