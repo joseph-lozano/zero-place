@@ -37,7 +37,9 @@ export const Route = createFileRoute('/api/zero/mutate')({
               // For pixel.place, we can also get userID from the mutation args
               // Cloud Zero validates the user and forwards the userID
               if (name === 'pixel.place') {
-                const pixelArgs = args as {
+                // args could be an array [{ ... }] or the object directly
+                const rawArgs = Array.isArray(args) ? args[0] : args
+                const pixelArgs = rawArgs as {
                   id: string
                   x: number
                   y: number
@@ -47,7 +49,7 @@ export const Route = createFileRoute('/api/zero/mutate')({
                 }
 
                 // If no session cookie, trust placedBy from Cloud Zero
-                if (!userID && pixelArgs.placedBy) {
+                if (!userID && pixelArgs?.placedBy) {
                   userID = pixelArgs.placedBy
                 }
 

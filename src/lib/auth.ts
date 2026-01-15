@@ -10,6 +10,15 @@ export const auth = betterAuth({
     provider: 'pg',
   }),
 
+  // Enable cross-subdomain cookies so Zero at zero.place.eureka.dev
+  // can receive cookies set by place.eureka.dev
+  advanced: {
+    crossSubDomainCookies: {
+      enabled: true,
+      domain: '.eureka.dev', // Note the leading dot
+    },
+  },
+
   plugins: [
     emailOTP({
       otpLength: 6,
