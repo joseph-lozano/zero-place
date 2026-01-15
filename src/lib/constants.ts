@@ -2,12 +2,6 @@
 export const CANVAS_WIDTH = Number(process.env.CANVAS_WIDTH) || 100
 export const CANVAS_HEIGHT = Number(process.env.CANVAS_HEIGHT) || 100
 
-// Cooldown in milliseconds (default 15 seconds)
-export const PIXEL_COOLDOWN_MS =
-  process.env.PIXEL_COOLDOWN_MS !== undefined
-    ? Number(process.env.PIXEL_COOLDOWN_MS)
-    : 15000
-
 // Classic r/place 16-color palette
 export const COLORS = [
   { hex: '#FFFFFF', name: 'White' },

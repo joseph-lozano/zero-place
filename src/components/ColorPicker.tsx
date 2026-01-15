@@ -3,13 +3,11 @@ import { COLORS, type ColorHex } from '@/lib/constants'
 interface ColorPickerProps {
   selectedColor: ColorHex
   onColorSelect: (color: ColorHex) => void
-  disabled?: boolean
 }
 
 export function ColorPicker({
   selectedColor,
   onColorSelect,
-  disabled,
 }: ColorPickerProps) {
   return (
     <div className="flex flex-col items-center gap-2">
@@ -19,12 +17,11 @@ export function ColorPicker({
           <button
             key={hex}
             onClick={() => onColorSelect(hex)}
-            disabled={disabled}
             className={`h-8 w-8 rounded border-2 transition-transform hover:scale-110 ${
               selectedColor === hex
                 ? 'border-white shadow-lg shadow-white/20'
                 : 'border-transparent'
-            } ${disabled ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'}`}
+            } cursor-pointer`}
             style={{ backgroundColor: hex }}
             title={name}
             aria-label={name}

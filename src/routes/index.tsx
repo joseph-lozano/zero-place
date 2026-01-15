@@ -4,7 +4,6 @@ import { useCallback, useEffect, useState } from 'react'
 import { ZeroWrapper } from '@/components/ZeroWrapper'
 import { Canvas } from '@/components/Canvas'
 import { ColorPicker } from '@/components/ColorPicker'
-import { CooldownTimer } from '@/components/CooldownTimer'
 import { PixelInfo } from '@/components/PixelInfo'
 import { COLORS, type ColorHex } from '@/lib/constants'
 import type { Pixel, User } from '@/zero/schema'
@@ -54,26 +53,9 @@ function CanvasPage({ userId }: CanvasPageProps) {
   // Selected color state
   const [selectedColor, setSelectedColor] = useState<ColorHex>(COLORS[0].hex)
 
-  // Cooldown state
-  const [lastPlacementTime, setLastPlacementTime] = useState<number | null>(
-    null,
-  )
-  const [canPlace, setCanPlace] = useState(true)
-
   // Hovered pixel state
   const [hoveredPixel, setHoveredPixel] = useState<PixelWithUser | null>(null)
   const [hoveredCoords, setHoveredCoords] = useState({ x: -1, y: -1 })
-
-  // Handle pixel placement
-  const handlePixelPlace = useCallback(() => {
-    setLastPlacementTime(Date.now())
-    setCanPlace(false)
-  }, [])
-
-  // Handle cooldown end
-  const handleCooldownEnd = useCallback(() => {
-    setCanPlace(true)
-  }, [])
 
   // Handle pixel hover
   const handlePixelHover = useCallback(
@@ -96,8 +78,6 @@ function CanvasPage({ userId }: CanvasPageProps) {
           <Canvas
             selectedColor={selectedColor}
             userId={userId}
-            onPixelPlace={handlePixelPlace}
-            canPlace={canPlace}
             onPixelHover={handlePixelHover}
           />
 
@@ -107,13 +87,6 @@ function CanvasPage({ userId }: CanvasPageProps) {
             <ColorPicker
               selectedColor={selectedColor}
               onColorSelect={setSelectedColor}
-              disabled={!canPlace}
-            />
-
-            {/* Cooldown timer */}
-            <CooldownTimer
-              lastPlacementTime={lastPlacementTime}
-              onCooldownEnd={handleCooldownEnd}
             />
 
             {/* Pixel info */}

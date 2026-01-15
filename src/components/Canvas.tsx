@@ -11,8 +11,6 @@ type PixelWithUser = Pixel & { user?: User | null }
 interface CanvasProps {
   selectedColor: ColorHex
   userId: string
-  onPixelPlace: () => void
-  canPlace: boolean
   onPixelHover?: (pixel: PixelWithUser | null, x: number, y: number) => void
 }
 
@@ -20,13 +18,7 @@ const PIXEL_SIZE = 8 // Base pixel size in CSS pixels
 const MIN_ZOOM = 0.5
 const MAX_ZOOM = 4
 
-export function Canvas({
-  selectedColor,
-  userId,
-  onPixelPlace,
-  canPlace,
-  onPixelHover,
-}: CanvasProps) {
+export function Canvas({ selectedColor, userId, onPixelHover }: CanvasProps) {
   const zero = useZero()
   const [pixels] = useQuery(queries.pixels.all())
 
@@ -45,8 +37,6 @@ export function Canvas({
 
   const handlePixelClick = useCallback(
     (x: number, y: number) => {
-      if (!canPlace) return
-
       const pixelId = `${x}_${y}`
 
       zero.mutate(
@@ -59,10 +49,8 @@ export function Canvas({
           placedAt: Date.now(),
         }),
       )
-
-      onPixelPlace()
     },
-    [zero, selectedColor, userId, canPlace, onPixelPlace],
+    [zero, selectedColor, userId],
   )
 
   const handleWheel = useCallback((e: React.WheelEvent) => {
@@ -171,11 +159,7 @@ export function Canvas({
             width: CANVAS_WIDTH * scaledPixelSize,
             height: CANVAS_HEIGHT * scaledPixelSize,
             transform: `translate(${pan.x}px, ${pan.y}px)`,
-            cursor: isPanning
-              ? 'grabbing'
-              : canPlace
-                ? 'crosshair'
-                : 'not-allowed',
+            cursor: isPanning ? 'grabbing' : 'crosshair',
           }}
         >
           {/* Render grid */}
