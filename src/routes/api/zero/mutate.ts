@@ -1,8 +1,8 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { mustGetMutator } from '@rocicorp/zero'
 import { handleMutateRequest } from '@rocicorp/zero/server'
-import { zeroNodePg } from '@rocicorp/zero/server/adapters/pg'
-import { Pool } from 'pg'
+import { zeroPostgresJS } from '@rocicorp/zero/server/adapters/postgresjs'
+import postgres from 'postgres'
 import { nanoid } from 'nanoid'
 import { auth } from '@/lib/auth'
 import { db } from '@/db'
@@ -11,11 +11,9 @@ import { schema, type AuthData } from '@/zero/schema'
 import { mutators } from '@/zero/mutators'
 import { PIXEL_COOLDOWN_MS } from '@/lib/constants'
 
-// Create a pool for Zero
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL!,
-})
-const dbProvider = zeroNodePg(schema, pool)
+// Create a postgres.js client for Zero
+const sql = postgres(process.env.DATABASE_URL!)
+const dbProvider = zeroPostgresJS(schema, sql)
 
 // Track last placement time per user (in-memory for simplicity)
 // In production, you might want to store this in Redis or the database
