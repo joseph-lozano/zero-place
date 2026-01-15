@@ -12,10 +12,5 @@
   "git": true,
   "version": 1,
   "framework": "react-cra",
-  "chosenAddOns": [
-    "eslint",
-    "compiler",
-    "drizzle",
-    "start"
-  ]
+  "chosenAddOns": ["eslint", "compiler", "drizzle", "start"]
 }
