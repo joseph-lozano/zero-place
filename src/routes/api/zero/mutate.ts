@@ -23,21 +23,39 @@ export const Route = createFileRoute('/api/zero/mutate')({
   server: {
     handlers: {
       POST: async ({ request }: { request: Request }) => {
-        // Get user session
+        // Try to get session from cookies (direct calls)
+        // If not available, we'll get userID from the mutation args (via Cloud Zero)
         const session = await auth.api.getSession({ headers: request.headers })
-        const ctx: AuthData = { userID: session?.user?.id ?? null }
 
         const result = await handleMutateRequest(
           dbProvider,
           (transact) =>
             transact(async (tx, name, args) => {
-              // Enforce cooldown for pixel.place mutations
+              // Get userID from session if available
+              let userID: string | null = session?.user?.id ?? null
+
+              // For pixel.place, we can also get userID from the mutation args
+              // Cloud Zero validates the user and forwards the userID
               if (name === 'pixel.place') {
-                if (!ctx.userID) {
+                const pixelArgs = args as {
+                  id: string
+                  x: number
+                  y: number
+                  color: string
+                  placedBy: string
+                  placedAt: number
+                }
+
+                // If no session cookie, trust placedBy from Cloud Zero
+                if (!userID && pixelArgs.placedBy) {
+                  userID = pixelArgs.placedBy
+                }
+
+                if (!userID) {
                   throw new Error('Authentication required to place pixels')
                 }
 
-                const lastTime = lastPlacementTime.get(ctx.userID) ?? 0
+                const lastTime = lastPlacementTime.get(userID) ?? 0
                 const now = Date.now()
                 const timeSinceLastPlacement = now - lastTime
 
@@ -49,19 +67,9 @@ export const Route = createFileRoute('/api/zero/mutate')({
                 }
 
                 // Update last placement time
-                lastPlacementTime.set(ctx.userID, now)
+                lastPlacementTime.set(userID, now)
 
                 // Record to pixel_history table using Drizzle
-                // This happens outside of Zero's transaction but that's OK for history
-                const pixelArgs = args as {
-                  id: string
-                  x: number
-                  y: number
-                  color: string
-                  placedBy: string
-                  placedAt: number
-                }
-
                 await db.insert(pixelHistory).values({
                   id: nanoid(),
                   x: pixelArgs.x,
@@ -72,6 +80,7 @@ export const Route = createFileRoute('/api/zero/mutate')({
                 })
               }
 
+              const ctx: AuthData = { userID }
               const mutator = mustGetMutator(mutators, name)
               return mutator.fn({ tx, args, ctx })
             }),
