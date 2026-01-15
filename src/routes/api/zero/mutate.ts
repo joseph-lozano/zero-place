@@ -9,15 +9,10 @@ import { db } from '@/db'
 import { pixelHistory } from '@/db/schema'
 import { schema, type AuthData } from '@/zero/schema'
 import { mutators } from '@/zero/mutators'
-import { PIXEL_COOLDOWN_MS } from '@/lib/constants'
 
 // Create a postgres.js client for Zero
 const sql = postgres(process.env.DATABASE_URL!)
 const dbProvider = zeroPostgresJS(schema, sql)
-
-// Track last placement time per user (in-memory for simplicity)
-// In production, you might want to store this in Redis or the database
-const lastPlacementTime = new Map<string, number>()
 
 export const Route = createFileRoute('/api/zero/mutate')({
   server: {
@@ -56,20 +51,6 @@ export const Route = createFileRoute('/api/zero/mutate')({
                 if (!userID) {
                   throw new Error('Authentication required to place pixels')
                 }
-
-                const lastTime = lastPlacementTime.get(userID) ?? 0
-                const now = Date.now()
-                const timeSinceLastPlacement = now - lastTime
-
-                if (timeSinceLastPlacement < PIXEL_COOLDOWN_MS) {
-                  const remainingMs = PIXEL_COOLDOWN_MS - timeSinceLastPlacement
-                  throw new Error(
-                    `Cooldown active. Please wait ${Math.ceil(remainingMs / 1000)} seconds.`,
-                  )
-                }
-
-                // Update last placement time
-                lastPlacementTime.set(userID, now)
 
                 // Record to pixel_history table using Drizzle
                 await db.insert(pixelHistory).values({
