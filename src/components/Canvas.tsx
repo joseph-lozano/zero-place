@@ -1,6 +1,7 @@
 import { useCallback, useState, useRef } from 'react'
 import { useQuery, useZero } from '@rocicorp/zero/react'
 import { queries } from '@/zero/queries'
+import { mutators } from '@/zero/mutators'
 import { CANVAS_WIDTH, CANVAS_HEIGHT, type ColorHex } from '@/lib/constants'
 import type { Pixel, User } from '@/zero/schema'
 
@@ -48,14 +49,16 @@ export function Canvas({
 
       const pixelId = `${x}_${y}`
 
-      zero.mutate.pixel.upsert({
-        id: pixelId,
-        x,
-        y,
-        color: selectedColor,
-        placedBy: userId,
-        placedAt: Date.now(),
-      })
+      zero.mutate(
+        mutators.pixel.place({
+          id: pixelId,
+          x,
+          y,
+          color: selectedColor,
+          placedBy: userId,
+          placedAt: Date.now(),
+        }),
+      )
 
       onPixelPlace()
     },
