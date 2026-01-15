@@ -1,4 +1,3 @@
-import { randomInt } from 'node:crypto'
 import { betterAuth } from 'better-auth'
 import { drizzleAdapter } from 'better-auth/adapters/drizzle'
 import { emailOTP } from 'better-auth/plugins'
@@ -24,12 +23,9 @@ export const auth = betterAuth({
       otpLength: 6,
       expiresIn: 300, // 5 minutes
 
-      // Hardcode OTP in development
+      // Hardcode OTP for now (debugging)
       generateOTP: () => {
-        if (process.env.NODE_ENV === 'development') {
-          return '424242'
-        }
-        return randomInt(0, 1000000).toString().padStart(6, '0')
+        return '424242'
       },
 
       // Send OTP (log in dev, email in prod)
