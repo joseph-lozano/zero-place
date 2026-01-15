@@ -1,5 +1,6 @@
 import { Link, useNavigate } from '@tanstack/react-router'
 import { useSession, signOut } from '@/lib/auth-client'
+import { LogOut, User } from 'lucide-react'
 
 export default function Header() {
   const navigate = useNavigate()
@@ -11,28 +12,36 @@ export default function Header() {
   }
 
   return (
-    <header className="flex items-center justify-between bg-gray-900 px-4 py-3 text-white">
-      <Link to="/" className="text-xl font-bold">
+    <header className="sticky top-0 z-50 flex items-center justify-between border-b border-white/10 bg-slate-950/80 px-6 py-4 backdrop-blur-md">
+      <Link
+        to="/"
+        className="flex items-center gap-2 text-xl font-bold text-white transition-opacity hover:opacity-80"
+      >
+        <div className="h-6 w-6 rounded bg-gradient-to-br from-indigo-500 to-purple-500" />
         Zero Place
       </Link>
 
       <div className="flex items-center gap-4">
         {isPending ? (
-          <span className="text-sm text-gray-400">Loading...</span>
+          <span className="text-sm text-slate-400">Loading...</span>
         ) : session ? (
-          <>
-            <span className="text-sm text-gray-300">{session.user.email}</span>
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2 text-sm text-slate-300">
+              <User size={16} />
+              <span className="hidden sm:inline">{session.user.email}</span>
+            </div>
             <button
               onClick={handleSignOut}
-              className="rounded bg-gray-700 px-3 py-1 text-sm hover:bg-gray-600"
+              className="flex items-center gap-2 rounded-lg bg-white/5 px-3 py-1.5 text-sm font-medium text-white transition-colors hover:bg-white/10"
             >
-              Sign Out
+              <LogOut size={16} />
+              <span>Sign Out</span>
             </button>
-          </>
+          </div>
         ) : (
           <Link
             to="/login"
-            className="rounded bg-blue-600 px-3 py-1 text-sm hover:bg-blue-700"
+            className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-indigo-700"
           >
             Sign In
           </Link>

@@ -1,5 +1,6 @@
 import { COLORS } from '@/lib/constants'
 import type { Pixel, User } from '@/zero/schema'
+import { Clock, User as UserIcon, Palette, MapPin } from 'lucide-react'
 
 // Pixel with optional user relation from the query
 type PixelWithUser = Pixel & { user?: User | null }
@@ -13,8 +14,13 @@ interface PixelInfoProps {
 export function PixelInfo({ pixel, x, y }: PixelInfoProps) {
   if (x < 0 || y < 0) {
     return (
-      <div className="h-20 text-sm text-gray-500">
-        Hover over a pixel to see info
+      <div className="flex h-32 flex-col items-center justify-center rounded-lg border border-dashed border-white/10 bg-white/5 p-4 text-center text-sm text-slate-500">
+        <MapPin size={24} className="mb-2 opacity-50" />
+        <p>
+          Hover over a pixel
+          <br />
+          to see details
+        </p>
       </div>
     )
   }
@@ -38,38 +44,60 @@ export function PixelInfo({ pixel, x, y }: PixelInfoProps) {
   }
 
   return (
-    <div className="h-20 text-sm">
-      <div className="flex items-center gap-2">
-        <span className="text-gray-400">Position:</span>
-        <span className="font-mono text-white">
+    <div className="flex flex-col gap-3 rounded-lg bg-white/5 p-4 text-sm">
+      <div className="flex items-center justify-between border-b border-white/5 pb-2">
+        <div className="flex items-center gap-2 text-slate-400">
+          <MapPin size={14} />
+          <span>Position</span>
+        </div>
+        <span className="font-mono font-medium text-white">
           ({x}, {y})
         </span>
       </div>
+
       {pixel ? (
         <>
-          <div className="flex items-center gap-2">
-            <span className="text-gray-400">Color:</span>
-            <div
-              className="h-3 w-3 rounded border border-gray-600"
-              style={{ backgroundColor: pixel.color }}
-            />
-            <span className="text-white">{colorName}</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <span className="text-gray-400">Placed:</span>
-            <span className="text-white">{formatTime(pixel.placedAt)}</span>
-          </div>
-          {pixel.user && (
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2 text-slate-400">
+              <Palette size={14} />
+              <span>Color</span>
+            </div>
             <div className="flex items-center gap-2">
-              <span className="text-gray-400">By:</span>
-              <span className="truncate text-white">
+              <div
+                className="h-3 w-3 rounded-full border border-white/10"
+                style={{ backgroundColor: pixel.color }}
+              />
+              <span className="font-medium text-white">{colorName}</span>
+            </div>
+          </div>
+
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2 text-slate-400">
+              <Clock size={14} />
+              <span>Placed</span>
+            </div>
+            <span className="font-medium text-white">
+              {formatTime(pixel.placedAt)}
+            </span>
+          </div>
+
+          {pixel.user && (
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2 text-slate-400">
+                <UserIcon size={14} />
+                <span>By</span>
+              </div>
+              <span
+                className="max-w-[120px] truncate font-medium text-white"
+                title={pixel.user.name || pixel.user.email}
+              >
                 {pixel.user.name || pixel.user.email}
               </span>
             </div>
           )}
         </>
       ) : (
-        <div className="text-gray-500">Empty pixel</div>
+        <div className="py-4 text-center text-slate-500">Empty pixel</div>
       )}
     </div>
   )

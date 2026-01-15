@@ -28,8 +28,11 @@ function HomePage() {
 
   if (isPending) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-gray-900 text-white">
-        <p>Loading...</p>
+      <div className="flex min-h-screen items-center justify-center bg-slate-950 text-white">
+        <div className="flex flex-col items-center gap-4">
+          <div className="h-8 w-8 animate-spin rounded-full border-4 border-indigo-500 border-t-transparent" />
+          <p className="text-slate-400">Loading...</p>
+        </div>
       </div>
     )
   }
@@ -67,34 +70,40 @@ function CanvasPage({ userId }: CanvasPageProps) {
   )
 
   return (
-    <div className="flex min-h-screen flex-col bg-gray-900 text-white">
-      <div className="flex flex-1 flex-col items-center justify-center gap-6 p-4">
-        {/* Title */}
-        <h1 className="text-3xl font-bold">Zero Place</h1>
-
+    <div className="flex min-h-[calc(100vh-64px)] flex-col bg-gradient-to-br from-slate-950 via-slate-900 to-black text-white">
+      <div className="flex flex-1 flex-col items-center justify-center gap-8 p-4 lg:p-8">
         {/* Main content area */}
-        <div className="flex flex-col items-center gap-6 lg:flex-row lg:items-start lg:gap-8">
+        <div className="flex flex-col items-center gap-8 xl:flex-row xl:items-start xl:gap-12">
           {/* Canvas */}
-          <Canvas
-            selectedColor={selectedColor}
-            userId={userId}
-            onPixelHover={handlePixelHover}
-          />
+          <div className="relative">
+            <Canvas
+              selectedColor={selectedColor}
+              userId={userId}
+              onPixelHover={handlePixelHover}
+            />
+          </div>
 
           {/* Sidebar */}
-          <div className="flex flex-col gap-6">
+          <div className="flex w-full max-w-xs flex-col gap-6 rounded-xl border border-white/5 bg-white/5 p-6 backdrop-blur-sm xl:w-80">
+            <h2 className="text-lg font-semibold text-slate-200">Tools</h2>
+
             {/* Color picker */}
             <ColorPicker
               selectedColor={selectedColor}
               onColorSelect={setSelectedColor}
             />
 
+            <div className="h-px bg-white/10" />
+
             {/* Pixel info */}
-            <PixelInfo
-              pixel={hoveredPixel}
-              x={hoveredCoords.x}
-              y={hoveredCoords.y}
-            />
+            <div className="flex flex-col gap-2">
+              <h3 className="text-sm font-medium text-slate-400">Info</h3>
+              <PixelInfo
+                pixel={hoveredPixel}
+                x={hoveredCoords.x}
+                y={hoveredCoords.y}
+              />
+            </div>
           </div>
         </div>
       </div>

@@ -64,14 +64,22 @@ function LoginPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center">
-      <div className="w-full max-w-sm space-y-6 p-6">
-        <h1 className="text-center text-2xl font-bold">Zero Place</h1>
+    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-slate-950 via-slate-900 to-black text-white">
+      <div className="w-full max-w-sm space-y-8 rounded-2xl border border-white/5 bg-white/5 p-8 backdrop-blur-sm">
+        <div className="text-center">
+          <h1 className="text-3xl font-bold tracking-tight">Welcome Back</h1>
+          <p className="mt-2 text-sm text-slate-400">
+            Sign in to start placing pixels
+          </p>
+        </div>
 
         {step === 'email' ? (
-          <form onSubmit={handleSendOtp} className="space-y-4">
-            <div>
-              <label htmlFor="email" className="block text-sm font-medium">
+          <form onSubmit={handleSendOtp} className="space-y-6">
+            <div className="space-y-2">
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium text-slate-300"
+              >
                 Email
               </label>
               <input
@@ -81,28 +89,31 @@ function LoginPage() {
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="you@example.com"
                 required
-                className="mt-1 block w-full rounded border border-gray-300 px-3 py-2 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                className="block w-full rounded-lg border border-white/10 bg-white/5 px-4 py-2.5 text-white placeholder-slate-500 transition-colors focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
               />
             </div>
 
-            {error && <p className="text-sm text-red-600">{error}</p>}
+            {error && <p className="text-sm text-red-400">{error}</p>}
 
             <button
               type="submit"
               disabled={loading}
-              className="w-full rounded bg-blue-600 px-4 py-2 font-medium text-white hover:bg-blue-700 disabled:opacity-50"
+              className="w-full rounded-lg bg-indigo-600 px-4 py-2.5 font-medium text-white transition-colors hover:bg-indigo-700 disabled:opacity-50"
             >
               {loading ? 'Sending...' : 'Send Code'}
             </button>
           </form>
         ) : (
-          <form onSubmit={handleVerifyOtp} className="space-y-4">
-            <p className="text-center text-sm text-gray-600">
-              We sent a code to <strong>{email}</strong>
+          <form onSubmit={handleVerifyOtp} className="space-y-6">
+            <p className="text-center text-sm text-slate-400">
+              We sent a code to <strong className="text-white">{email}</strong>
             </p>
 
-            <div>
-              <label htmlFor="otp" className="block text-sm font-medium">
+            <div className="space-y-2">
+              <label
+                htmlFor="otp"
+                className="block text-sm font-medium text-slate-300"
+              >
                 Verification Code
               </label>
               <input
@@ -113,16 +124,16 @@ function LoginPage() {
                 placeholder="424242"
                 maxLength={6}
                 required
-                className="mt-1 block w-full rounded border border-gray-300 px-3 py-2 text-center text-lg tracking-widest focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                className="block w-full rounded-lg border border-white/10 bg-white/5 px-4 py-2.5 text-center text-xl tracking-[0.5em] text-white placeholder-slate-500 transition-colors focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
               />
             </div>
 
-            {error && <p className="text-sm text-red-600">{error}</p>}
+            {error && <p className="text-sm text-red-400">{error}</p>}
 
             <button
               type="submit"
               disabled={loading}
-              className="w-full rounded bg-blue-600 px-4 py-2 font-medium text-white hover:bg-blue-700 disabled:opacity-50"
+              className="w-full rounded-lg bg-indigo-600 px-4 py-2.5 font-medium text-white transition-colors hover:bg-indigo-700 disabled:opacity-50"
             >
               {loading ? 'Verifying...' : 'Verify & Sign In'}
             </button>
@@ -134,7 +145,7 @@ function LoginPage() {
                 setOtp('')
                 setError(null)
               }}
-              className="w-full text-sm text-gray-600 hover:text-gray-800"
+              className="w-full text-sm text-slate-400 hover:text-white"
             >
               Use a different email
             </button>

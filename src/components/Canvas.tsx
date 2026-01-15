@@ -4,6 +4,7 @@ import { queries } from '@/zero/queries'
 import { mutators } from '@/zero/mutators'
 import { CANVAS_WIDTH, CANVAS_HEIGHT, type ColorHex } from '@/lib/constants'
 import type { Pixel, User } from '@/zero/schema'
+import { ZoomIn, ZoomOut, RotateCcw } from 'lucide-react'
 
 // Pixel with optional user relation from the query
 type PixelWithUser = Pixel & { user?: User | null }
@@ -109,33 +110,44 @@ export function Canvas({ selectedColor, userId, onPixelHover }: CanvasProps) {
   return (
     <div className="flex flex-col items-center gap-4">
       {/* Controls */}
-      <div className="flex items-center gap-4 text-sm text-gray-400">
-        <span>Zoom: {Math.round(zoom * 100)}%</span>
-        <button
-          onClick={() => setZoom((z) => Math.min(MAX_ZOOM, z * 1.2))}
-          className="rounded bg-gray-700 px-2 py-1 hover:bg-gray-600"
-        >
-          +
-        </button>
-        <button
-          onClick={() => setZoom((z) => Math.max(MIN_ZOOM, z * 0.8))}
-          className="rounded bg-gray-700 px-2 py-1 hover:bg-gray-600"
-        >
-          -
-        </button>
-        <button
-          onClick={resetView}
-          className="rounded bg-gray-700 px-2 py-1 hover:bg-gray-600"
-        >
-          Reset
-        </button>
-        <span className="text-xs">(Scroll to zoom, Shift+drag to pan)</span>
+      <div className="flex w-full items-center justify-between rounded-lg border border-white/5 bg-white/5 px-4 py-2 backdrop-blur-sm">
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => setZoom((z) => Math.min(MAX_ZOOM, z * 1.2))}
+            className="rounded p-1.5 text-slate-300 hover:bg-white/10 hover:text-white"
+            title="Zoom In"
+          >
+            <ZoomIn size={18} />
+          </button>
+          <button
+            onClick={() => setZoom((z) => Math.max(MIN_ZOOM, z * 0.8))}
+            className="rounded p-1.5 text-slate-300 hover:bg-white/10 hover:text-white"
+            title="Zoom Out"
+          >
+            <ZoomOut size={18} />
+          </button>
+          <div className="mx-1 h-4 w-px bg-white/10" />
+          <span className="min-w-[3rem] text-center text-sm font-medium text-slate-300">
+            {Math.round(zoom * 100)}%
+          </span>
+          <div className="mx-1 h-4 w-px bg-white/10" />
+          <button
+            onClick={resetView}
+            className="rounded p-1.5 text-slate-300 hover:bg-white/10 hover:text-white"
+            title="Reset View"
+          >
+            <RotateCcw size={18} />
+          </button>
+        </div>
+        <div className="text-xs text-slate-400">
+          Scroll to zoom • Shift+drag to pan
+        </div>
       </div>
 
       {/* Canvas container */}
       <div
         ref={containerRef}
-        className="overflow-hidden rounded-lg border border-gray-700 bg-gray-800"
+        className="overflow-hidden rounded-xl border border-white/10 bg-[#111] shadow-2xl shadow-black/50"
         style={{
           width: Math.min(
             CANVAS_WIDTH * PIXEL_SIZE + 4,
@@ -166,12 +178,12 @@ export function Canvas({ selectedColor, userId, onPixelHover }: CanvasProps) {
           {Array.from({ length: CANVAS_HEIGHT }, (_, y) =>
             Array.from({ length: CANVAS_WIDTH }, (_, x) => {
               const pixel = pixelMap.get(`${x}_${y}`)
-              const bgColor = pixel?.color ?? '#1f2937' // Default dark gray
+              const bgColor = pixel?.color ?? '#18181b' // Default dark gray (zinc-900)
 
               return (
                 <div
                   key={`${x}_${y}`}
-                  className="absolute box-border border-[0.5px] border-gray-700/30 transition-transform hover:z-10 hover:scale-125 hover:border-white"
+                  className="absolute box-border border-[0.5px] border-white/5 transition-transform hover:z-10 hover:scale-125 hover:border-white"
                   style={{
                     left: x * scaledPixelSize,
                     top: y * scaledPixelSize,
